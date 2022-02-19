@@ -1,0 +1,33 @@
+{
+  "name": "weatherapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giotsere/weatherapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/giotsere/weatherapp/issues"
+  },
+  "homepage": "https://github.com/giotsere/weatherapp#readme",
+  "devDependencies": {
+    "css-loader": "^6.6.0",
+    "eslint": "^8.9.0",
+    "eslint-config-prettier": "^8.4.0",
+    "postcss": "^8.4.6",
+    "postcss-loader": "^6.2.1",
+    "prettier": "^2.5.1",
+    "style-loader": "^3.3.1",
+    "tailwindcss": "^3.0.23",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
+  }
+}

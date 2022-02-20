@@ -1,0 +1,3 @@
+const API_KEY = '1b64f6d9811ea887823e672538b10f5e';
+
+exports.API_KEY = API_KEY;

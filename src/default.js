@@ -14,16 +14,22 @@ async function fetchDefaultData() {
     const cityResponse = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=thessaloniki&appid=${key.API_KEY}`,
       { mode: 'cors' }
-    );
-    cityData = await cityResponse.json();
+    ).catch((e) => {
+      console.log('Error' + e.message);
+    });
+    cityData = await cityResponse.json().catch((e) => {
+      console.log('Error' + e.message);
+    });
     localStorage.setItem('cityData', JSON.stringify(cityData));
 
     lat = cityData.coord.lat;
     lon = cityData.coord.lon;
+
+    return cityData;
   }
 }
 
-fetchDefaultData();
+fetchDefaultData().then(fetchForecastData);
 
 async function fetchForecastData() {
   if (forecastData != '') {
@@ -34,15 +40,20 @@ async function fetchForecastData() {
     const forecastResponse = await fetch(
       `https://api.openweathermap.org/data/2.5/onecall?lat=40.6403&lon=22.9439&appid=${key.API_KEY}`,
       { mode: 'cors' }
-    );
+    ).catch((e) => {
+      console.log('Error' + e.message);
+    });
 
-    forecastData = await forecastResponse.json();
+    forecastData = await forecastResponse.json().catch((e) => {
+      console.log('Error' + e.message);
+    });
     localStorage.setItem('forecastData', JSON.stringify(forecastData));
-    displayDefault();
+
+    return forecastData;
   }
 }
 
-fetchForecastData();
+fetchForecastData().then(displayDefault);
 
 function displayDefault() {
   //MAIN
@@ -128,8 +139,10 @@ function displayDefault() {
   document.body.appendChild(hourlySection);
 
   /* HTML STRUCTURE
-   *  5 DIVS
-   * section < div < hour, icon, temp
+    TODO: 
+      CONVERT DT TO DATE/HOUR/MIN
+      DISPLAY IT LIKE USUAL
+
    * section < div < date, icon, temp
    * section  < div < title, humidity | div < feels like 6
    * footer < div < made by, open wether api, icon

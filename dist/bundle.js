@@ -490,22 +490,6 @@ const API_KEY = '1b64f6d9811ea887823e672538b10f5e';
 exports.API_KEY = API_KEY;
 
 
-/***/ }),
-/* 12 */
-/***/ ((__unused_webpack_module, exports) => {
-
-const rain =
-  'https://img.icons8.com/external-flatart-icons-outline-flatarticons/64/000000/external-rain-weather-flatart-icons-outline-flatarticons-2.png';
-
-const cloud = 'https://img.icons8.com/ios/50/000000/cloud.png';
-
-const sun = 'https://img.icons8.com/ios/50/000000/sun--v1.png';
-
-exports.cloud = cloud;
-exports.sun = sun;
-exports.rain = rain;
-
-
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -581,13 +565,16 @@ var __webpack_exports__ = {};
 __webpack_require__(1);
 
 const key = __webpack_require__(11);
-const icons = __webpack_require__(12);
+
+const dataDiv = document.getElementById('data');
+const icon = document.getElementById('icon');
+const weatherText = document.getElementById('weather');
+
 let cityData = JSON.parse(localStorage.getItem('cityData')) || '';
 let forecastData = JSON.parse(localStorage.getItem('forecastData')) || '';
 let input = document.getElementById('input');
 input.value = '';
 let city = 'new york';
-const dataDiv = document.getElementById('data');
 
 function makeRequest() {
   async function fetchData() {
@@ -621,30 +608,36 @@ function makeRequest() {
     localStorage.setItem('forecastData', JSON.stringify(forecastData));
   }
 
-  fetchForecastData().then(displayDefault);
+  fetchForecastData().then(displayWeather);
 }
 
-function displayDefault() {
-  //MAIN
+function displayWeather() {
+  displayMain();
+  displayHourly();
+
+  /* HTML STRUCTURE
+    TODO: 
+      CONVERT DT TO DATE/HOUR/MIN
+      DISPLAY IT LIKE USUAL
+
+   * section < div < date, icon, temp
+   * section  < div < title, humidity | div < feels like 6
+   * footer < div < made by, open wether api, icon
+   *
+   */
+}
+
+function displayMain() {
   const cityName = document.getElementById('cityName');
   cityName.textContent = cityData.name;
   const temp = document.getElementById('temp');
   temp.textContent = (forecastData.current.temp - 273.15).toFixed(0) + '°';
-  const icon = document.getElementById('icon');
 
-  switch (forecastData.current.weather[0].main) {
-    case 'Clouds':
-      icon.src = icons.cloud;
-      break;
-    case 'Clear':
-      icon.src = icons.sun;
-      break;
-    case 'Rain':
-      icon.src = icons.rain;
-      break;
-  }
+  icon.src = weatherIcon(forecastData.current.weather[0].icon);
+  weatherText.textContent = forecastData.current.weather[0].main;
+}
 
-  // HOURLY WEATHER
+function displayHourly() {
   const hourlySection = document.createElement('section');
   const hourlyDiv = document.createElement('div');
   const currentDiv = document.createElement('div');
@@ -675,23 +668,17 @@ function displayDefault() {
 
     nextHour.textContent = convertUnixTime(hour.dt);
     let nextIcon = document.createElement('img');
+    let nextWeather = document.createElement('p');
 
-    switch (hour.weather[0].main) {
-      case 'Clouds':
-        nextIcon.src = icons.cloud;
-        break;
-      case 'Clear':
-        nextIcon.src = icons.sun;
-        break;
-      case 'Rain':
-        nextIcon.src = icons.rain;
-        break;
-    }
+    nextIcon.src = weatherIcon(hour.weather[0].icon);
+    nextWeather.textContent = hour.weather[0].main;
+
     let nextTemp = document.createElement('p');
     nextTemp.textContent = (hour.temp - 273.15).toFixed(0) + '°';
 
     nextDiv.appendChild(nextHour);
     nextDiv.appendChild(nextIcon);
+    nextDiv.appendChild(nextWeather);
     nextDiv.appendChild(nextTemp);
 
     hourlyDiv.appendChild(nextDiv);
@@ -700,17 +687,6 @@ function displayDefault() {
 
   hourlySection.appendChild(hourlyDiv);
   dataDiv.appendChild(hourlySection);
-
-  /* HTML STRUCTURE
-    TODO: 
-      CONVERT DT TO DATE/HOUR/MIN
-      DISPLAY IT LIKE USUAL
-
-   * section < div < date, icon, temp
-   * section  < div < title, humidity | div < feels like 6
-   * footer < div < made by, open wether api, icon
-   *
-   */
 }
 
 function convertUnixTime(time) {
@@ -740,6 +716,10 @@ input.addEventListener('keypress', (e) => {
     makeRequest();
   }
 });
+
+function weatherIcon(code) {
+  return `http://openweathermap.org/img/wn/${code}@2x.png`;
+}
 
 function clear() {
   dataDiv.textContent = '';

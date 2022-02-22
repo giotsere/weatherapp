@@ -1,4 +1,4 @@
-require('./style.css');
+require('../dist/output.css');
 
 const key = require('./key');
 
@@ -50,13 +50,13 @@ function makeRequest() {
 function displayWeather() {
   displayMain();
   displayHourly();
+  displayDaily();
 
   /* HTML STRUCTURE
     TODO: 
       CONVERT DT TO DATE/HOUR/MIN
       DISPLAY IT LIKE USUAL
 
-   * section < div < date, icon, temp
    * section  < div < title, humidity | div < feels like 6
    * footer < div < made by, open wether api, icon
    *
@@ -64,10 +64,10 @@ function displayWeather() {
 }
 
 function displayMain() {
-  const cityName = document.getElementById('cityName');
-  cityName.textContent = cityData.name;
+  const cityName = document.getElementById('city-name');
+  cityName.textContent = cityData.name + ', ' + cityData.sys.country;
   const temp = document.getElementById('temp');
-  temp.textContent = (forecastData.current.temp - 273.15).toFixed(0) + '°';
+  temp.textContent = convertToCelcius(forecastData.current.temp);
 
   icon.src = weatherIcon(forecastData.current.weather[0].icon);
   weatherText.textContent = forecastData.current.weather[0].main;
@@ -75,22 +75,31 @@ function displayMain() {
 
 function displayHourly() {
   const hourlySection = document.createElement('section');
+  hourlySection.classList.add('hourly-section');
   const hourlyDiv = document.createElement('div');
+  const hourlyTitle = document.createElement('h3');
+  hourlyTitle.textContent = 'Hourly Forcast';
+  hourlyTitle.classList.add('hourly-title');
   const currentDiv = document.createElement('div');
   const currentHour = document.createElement('p');
   const currentIcon = document.createElement('img');
+  currentIcon.classList.add('icon');
+  const currentWeather = document.createElement('p');
   const currentTemp = document.createElement('p');
 
-  currentHour.textContent = convertUnixTime(forecastData.current.dt);
+  currentHour.textContent = convertUnixTimeCurrent(forecastData.current.dt);
   currentIcon.src = icon.src;
-  currentTemp.textContent =
-    (forecastData.current.temp - 273.15).toFixed(0) + '°';
+  currentWeather.textContent = forecastData.current.weather[0].main;
+  currentTemp.textContent = convertToCelcius(forecastData.current.temp);
 
   currentDiv.appendChild(currentHour);
   currentDiv.appendChild(currentIcon);
+  currentDiv.appendChild(currentWeather);
   currentDiv.appendChild(currentTemp);
+  currentDiv.classList.add('hourly-card');
 
   hourlyDiv.appendChild(currentDiv);
+  hourlyDiv.classList.add('hourly-div');
 
   let counter = 1;
   const hourlyData = forecastData.hourly;
@@ -104,42 +113,128 @@ function displayHourly() {
 
     nextHour.textContent = convertUnixTime(hour.dt);
     let nextIcon = document.createElement('img');
+    nextIcon.classList.add('icon');
     let nextWeather = document.createElement('p');
 
     nextIcon.src = weatherIcon(hour.weather[0].icon);
     nextWeather.textContent = hour.weather[0].main;
 
     let nextTemp = document.createElement('p');
-    nextTemp.textContent = (hour.temp - 273.15).toFixed(0) + '°';
+    nextTemp.textContent = convertToCelcius(hour.temp);
 
     nextDiv.appendChild(nextHour);
     nextDiv.appendChild(nextIcon);
     nextDiv.appendChild(nextWeather);
     nextDiv.appendChild(nextTemp);
+    nextDiv.classList.add('hourly-card');
 
     hourlyDiv.appendChild(nextDiv);
     counter++;
   });
 
+  hourlySection.appendChild(hourlyTitle);
   hourlySection.appendChild(hourlyDiv);
   dataDiv.appendChild(hourlySection);
 }
 
-function convertUnixTime(time) {
-  let unix_timestamp = time;
+function displayDaily() {
+  const dailySection = document.createElement('section');
+  dailySection.classList.add('daily-section');
+  const dailyDiv = document.createElement('div');
+  const dailyTitle = document.createElement('h3');
+  dailyTitle.textContent = 'Daily Forecast';
+  dailyTitle.classList.add('daily-title');
+  const dailyData = forecastData.daily;
+
+  dailyData.forEach((day) => {
+    const date = convertUnixTimeDate(day.dt);
+
+    let dayDiv = document.createElement('div');
+    let dateTitle = document.createElement('p');
+    let weather = document.createElement('img');
+    weather.classList.add('icon');
+    let temp = document.createElement('p');
+
+    dateTitle.textContent = date;
+    weather.src = weatherIcon(day.weather[0].icon);
+    temp.textContent = convertToCelcius(day.temp.day);
+
+    dayDiv.appendChild(dateTitle);
+    dayDiv.appendChild(weather);
+    dayDiv.appendChild(temp);
+    dayDiv.classList.add('daily-card');
+
+    dailyDiv.appendChild(dayDiv);
+  });
+
+  dailySection.appendChild(dailyTitle);
+  dailySection.appendChild(dailyDiv);
+  dataDiv.appendChild(dailySection);
+}
+
+function convertUnixTimeDate(time) {
+  const unix_timestamp = time;
   // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-  let date = new Date(unix_timestamp * 1000);
+  const date = new Date(unix_timestamp * 1000);
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
   // Hours part from the timestamp
-  let hours = date.getHours();
+  const year = date.getFullYear();
+  const month = months[date.getMonth()];
+  const day = date.getDate();
+
+  let formattedDate;
+  return (formattedDate = day + ', ' + month + ', ' + year);
+}
+
+function convertUnixTimeCurrent(time) {
+  const unix_timestamp = time;
+  // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+  const date = new Date(unix_timestamp * 1000);
+  // Hours part from the timestamp
+  const hours = date.getHours();
   // Minutes part from the timestamp
-  let minutes = '0' + date.getMinutes();
+  const minutes = '0' + date.getMinutes();
   // Seconds part from the timestamp
-  let seconds = '0' + date.getSeconds();
+  const seconds = '0' + date.getSeconds();
+
+  // Will display time in 10:30:23 format
+  let formattedTime;
+  return (formattedTime =
+    hours + ':' + minutes.substring(1) + ':' + seconds.substring(1));
+}
+
+function convertUnixTime(time) {
+  const unix_timestamp = time;
+  // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+  const date = new Date(unix_timestamp * 1000);
+  // Hours part from the timestamp
+  const hours = date.getHours();
+  // Minutes part from the timestamp
+  const minutes = '0' + date.getMinutes();
+  // Seconds part from the timestamp
+  const seconds = '0' + date.getSeconds();
 
   // Will display time in 10:30:23 format
   let formattedTime;
   return (formattedTime =
     hours + ':' + minutes.substring(-2) + ':' + seconds.substring(-2));
+}
+
+function convertToCelcius(temp) {
+  return (temp - 273.15).toFixed(0) + '°C';
 }
 
 makeRequest();

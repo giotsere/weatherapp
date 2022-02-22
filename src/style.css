@@ -1,3 +1,114 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .icon {
+    @apply my-4
+    max-w-xs
+    bg-gradient-to-r
+    bg-slate-300
+    opacity-75
+    rounded-full;
+  }
+
+  a {
+    @apply inline-block font-semibold;
+  }
+
+  h1 {
+    @apply font-bold
+      text-2xl
+      p-4;
+  }
+
+  main {
+    @apply flex flex-col mb-40 items-center h-96;
+  }
+
+  #city-name {
+    @apply text-4xl mt-12 mb-4 font-bold;
+  }
+
+  #main-div {
+    @apply py-2 
+    px-4 
+    text-center
+    font-semibold
+    mb-12;
+  }
+
+  #main-div p {
+    @apply mb-4;
+  }
+
+  #input {
+    @apply p-2
+    rounded-md 
+    border-solid
+    border-2
+    border-gray-300
+    hover:border-gray-500
+    focus:outline-none
+    lg:w-80;
+  }
+
+  .hourly-section,
+  .daily-section {
+    @apply lg:w-2/4 m-auto p-8;
+  }
+  .hourly-div {
+    @apply lg:m-auto flex overflow-auto;
+  }
+
+  .hourly-title,
+  .daily-title {
+    @apply font-bold 
+      text-xl
+      p-4;
+  }
+  .hourly-card {
+    @apply py-2 
+      px-4 
+      m-2
+      mb-8
+      font-semibold 
+      text-center
+      rounded-md 
+      border-solid
+      border
+      border-gray-100
+      hover:border-gray-300
+      shadow
+      hover:shadow-xl
+      transition ease-in-out delay-75;
+  }
+
+  .daily-card {
+    @apply py-2 
+      px-4
+      my-8 
+      m-auto
+      flex 
+      justify-center
+      items-center
+      font-semibold 
+      rounded-md 
+      border-solid
+      border
+      border-gray-100
+      hover:border-gray-300
+      shadow
+      hover:shadow-xl
+      transition ease-in-out delay-75
+      lg:w-3/4;
+  }
+
+  .daily-card p {
+    @apply px-8;
+  }
+
+  footer {
+    @apply w-fit m-auto text-center;
+  }
+}

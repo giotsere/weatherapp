@@ -8,9 +8,12 @@
     <script src="bundle.js" defer></script>
   </head>
   <body>
+    <header>
+      <h1>Weather App</h1>
+    </header>
     <main>
-      <h1 id="cityName"></h1>
-      <div>
+      <h2 id="city-name"></h2>
+      <div id="main-div">
         <img src="" alt="" id="icon" />
         <p id="weather"></p>
         <p id="temp"></p>
@@ -18,5 +21,19 @@
       <input type="text" placeholder="Search..." id="input" />
     </main>
     <section id="data"></section>
+    <footer>
+      <p>
+        Made by <a href="https://www.github.com/giotsere">Giorgi Tsereteli</a>
+      </p>
+      <p>
+        Data Source: <a href="https://openweathermap.org/">Open Weather API</a>
+      </p>
+      <br />
+      <a href="https://www.github.com/giotsere/weatherapp">
+        <img src="../src/assets/github.png" alt="" height="48px" width="48px" />
+      </a>
+      <br />
+      <br />
+    </footer>
   </body>
 </html>

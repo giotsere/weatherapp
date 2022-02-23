@@ -82,16 +82,6 @@ function displayWeather() {
   displayMain();
   displayHourly();
   displayDaily();
-
-  /* HTML STRUCTURE
-    TODO: 
-      CONVERT DT TO DATE/HOUR/MIN
-      DISPLAY IT LIKE USUAL
-
-   * section  < div < title, humidity | div < feels like 6
-   * footer < div < made by, open wether api, icon
-   *
-   */
 }
 
 function displayMain() {

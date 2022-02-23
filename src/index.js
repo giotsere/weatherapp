@@ -12,6 +12,37 @@ let input = document.getElementById('input');
 input.value = '';
 let city = 'new york';
 
+makeRequest();
+
+function gps() {
+  let options = {
+    enableHighAccuracy: true,
+    timeout: 2000,
+    maximumAge: 0,
+  };
+
+  async function success(pos) {
+    let crd = pos.coords;
+
+    const geoResponse = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${crd.latitude}&lon=${crd.longitude}&appid=${key.API_KEY}`,
+      { mode: 'cors' }
+    );
+
+    const geoData = await geoResponse.json();
+    city = geoData.name;
+    loadData();
+  }
+
+  function error(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  }
+
+  navigator.geolocation.getCurrentPosition(success, error, options);
+}
+
+gps();
+
 function makeRequest() {
   async function fetchData() {
     const cityResponse = await fetch(
@@ -237,16 +268,18 @@ function convertToCelcius(temp) {
   return (temp - 273.15).toFixed(0) + '°C';
 }
 
-makeRequest();
-
 input.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     city = input.value;
-    clear();
-    input.value = '';
-    makeRequest();
+    loadData();
   }
 });
+
+function loadData() {
+  clear();
+  input.value = '';
+  makeRequest();
+}
 
 function weatherIcon(code) {
   return `http://openweathermap.org/img/wn/${code}@2x.png`;

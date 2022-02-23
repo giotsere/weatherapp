@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer components {
-  .icon {
+  .icon,
+  #icon {
     @apply my-4
     max-w-xs
     bg-gradient-to-r
@@ -23,7 +24,7 @@
   }
 
   main {
-    @apply flex flex-col mb-40 items-center h-96;
+    @apply flex flex-col mb-36 items-center h-96;
   }
 
   #city-name {
@@ -110,5 +111,9 @@
 
   footer {
     @apply w-fit m-auto text-center;
+  }
+
+  footer a {
+    @apply hover:text-blue-600 transition ease-in-out delay-75;
   }
 }

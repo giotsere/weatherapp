@@ -16,7 +16,7 @@ Type a location in the input field and press Enter
 
 ## Demo
 
-![Weather App Demo](assets/weatherapp-example.gif)
+![Weather App Demo](src/assets/weatherapp-example.gif)
 
 TODO:
 

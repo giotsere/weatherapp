@@ -14,6 +14,10 @@ A Weather App made with the Open Weather API
 
 Type a location in the input field and press Enter
 
+## Demo
+
+![Weather App Demo](assets/weatherapp-example.gif)
+
 TODO:
 
 - Search Autocomplete
